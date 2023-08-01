@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const SocketServer = require('./socketServer');
+const { METHODS } = require('http');
 const corsOptions = {
   Credential: 'true',
   
@@ -11,14 +12,20 @@ const corsOptions = {
 
 
 const app = express();
-
 app.use(express.json())
 app.options("*" , cors(corsOptions));
 app.use(cors(corsOptions));
+app.use(cors(
+  {
+    origin: [process.env.URL],
+    methods:["POST","GET"],
+    credentials: true
+  }
+));
 app.use(cookieParser())
 
 
-//#region // !Socket
+//#region //!Socket
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
